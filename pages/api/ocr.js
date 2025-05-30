@@ -21,12 +21,13 @@ export default async function handler(req, res) {
     try {
       const buffer = await fs.readFile(file.filepath);
 
-      const worker = await createWorker({
-        corePath: "/tesseract-core-simd.wasm",
-        langPath: "/tessdata",
-        workerPath: "/tesseract.worker.min.js",
-        gzip: false,
-      });
+const worker = await createWorker({
+  corePath: "https://unpkg.com/tesseract.js-core@2.2.0/tesseract-core-simd.wasm",
+  langPath: "https://tessdata.projectnaptha.com/4.0.0",
+  workerPath: "https://unpkg.com/tesseract.js@2.1.5/dist/worker.min.js",
+  gzip: false,
+});
+
 
       await worker.load();
       await worker.loadLanguage("eng+kor");
