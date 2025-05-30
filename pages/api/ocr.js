@@ -19,9 +19,11 @@ export default async function handler(req, res) {
 
     try {
       const worker = await createWorker({
-      corePath: "/tesseract-core-simd.wasm", // ✅ public 폴더 기준
-      langPath: "/tessdata",                 // ✅ public 폴더 기준
-    });
+       corePath: "/tesseract-core-simd.wasm",
+       langPath: "/tessdata",
+       workerPath: "/tesseract.worker.min.js", // ⬅️ 이거 같이 넣어줘야 함
+       gzip: false,
+      });
 
       await worker.load();
       await worker.loadLanguage("eng+kor");
