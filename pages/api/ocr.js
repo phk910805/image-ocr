@@ -1,5 +1,6 @@
 import { createWorker } from "tesseract.js";
 import { IncomingForm } from "formidable";
+import fs from "fs/promises";
 
 export const config = {
   api: {
@@ -18,18 +19,20 @@ export default async function handler(req, res) {
       return res.status(400).json({ text: "이미지 파일이 없습니다." });
 
     try {
+      const buffer = await fs.readFile(file.filepath);
+
       const worker = await createWorker({
-       corePath: "/tesseract-core-simd.wasm",
-       langPath: "/tessdata",
-       workerPath: "/tesseract.worker.min.js", // ⬅️ 이거 같이 넣어줘야 함
-       gzip: false,
+        corePath: "/tesseract-core-simd.wasm",
+        langPath: "/tessdata",
+        workerPath: "/tesseract.worker.min.js",
+        gzip: false,
       });
 
       await worker.load();
       await worker.loadLanguage("eng+kor");
       await worker.initialize("eng+kor");
 
-      const { data } = await worker.recognize(file.filepath);
+      const { data } = await worker.recognize(buffer);
       await worker.terminate();
 
       return res.status(200).json({ text: data.text });
@@ -39,5 +42,3 @@ export default async function handler(req, res) {
     }
   });
 }
-
-
