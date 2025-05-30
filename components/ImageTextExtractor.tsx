@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 
 export default function ImageTextExtractor() {
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState<string | null>(null);
   const [text, setText] = useState("");
   const [loading, setLoading] = useState(false);
 
